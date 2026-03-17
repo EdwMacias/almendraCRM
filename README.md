@@ -24,7 +24,7 @@ apps/
 docker-compose.yml
 ```
 
-## Arranque
+## Arranque en desarrollo
 
 1. Crear variables locales:
 
@@ -55,6 +55,53 @@ npm run dev:backend
 ```bash
 npm run dev:frontend
 ```
+
+## Despliegue con Docker Compose
+
+1. Crear el archivo de entorno si hace falta:
+
+```bash
+cp .env.example .env
+```
+
+2. Revisar como minimo:
+
+```bash
+POSTGRES_DB=crm_inventory
+POSTGRES_USER=crmpro
+POSTGRES_PASSWORD=un_password_seguro
+user=usuario_app
+password=password_app
+JWT_SECRET=un_secreto_largo_y_aleatorio
+```
+
+3. Levantar el stack completo:
+
+```bash
+docker compose up -d --build
+```
+
+4. Accesos esperados:
+
+- Frontend: `http://localhost`
+- Backend interno: `http://backend:4000` dentro de la red de Docker
+- Base de datos: disponible solo dentro de la red `crm-network`
+
+## Arquitectura Docker
+
+- `frontend`: imagen multi-stage con Vite build + Nginx
+- `backend`: imagen Node.js orientada a produccion
+- `postgres`: contenedor PostgreSQL con inicializacion por `schema.sql` y `seed.sql`
+- Red compartida: `crm-network`
+- Volumen persistente: `postgres_data`
+
+## Buenas practicas incluidas
+
+- La base de datos no expone puerto al host por defecto.
+- El frontend consume la API por `/api` y Nginx hace proxy al backend.
+- Hay `healthchecks` para base de datos, backend y frontend.
+- Las imagenes separan build y runtime donde aplica.
+- El entorno sensible vive en `.env` y existe `.env.example` para bootstrap.
 
 ## Endpoints principales
 
