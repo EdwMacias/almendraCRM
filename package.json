@@ -1,0 +1,14 @@
+{
+  "name": "crm-inventario-pedidos",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/frontend",
+    "apps/backend"
+  ],
+  "scripts": {
+    "dev:frontend": "npm --workspace apps/frontend run dev",
+    "dev:backend": "npm --workspace apps/backend run dev",
+    "start:backend": "npm --workspace apps/backend run start"
+  }
+}
